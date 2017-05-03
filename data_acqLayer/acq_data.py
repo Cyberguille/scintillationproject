@@ -23,7 +23,6 @@ class Acq(object):
         gga = GGA(data[0])
         if self.utc > gga.TimeUTC:
             self.date += datetime.timedelta(days=1)
-        utc = gga.TimeUTC
         gsa = GSA(data[1])
         gsv = [GSV(data[2])]
         for i in range(3,5):
@@ -31,7 +30,7 @@ class Acq(object):
         rmc = RMC(data[len(data)-1])
         if rmc != None:
             self.date = rmc.Date
-        # self.date.time = self.utc
+        self.date = self.date.replace(hour=gga.TimeUTC.hour,minute=gga.TimeUTC.minute,second=gga.TimeUTC.second,microsecond=gga.TimeUTC.microsecond)
         self.save(gga,gsa,gsv,self.date,1)
 
 
@@ -43,17 +42,11 @@ class Acq(object):
         x = conn.cursor()
         try:
             datem = date.strftime('%Y-%m-%d %H:%M:%S')
-            # print (datem,float(gsa.Hdop),float(gsa.Vdop),float(gsa.Pdop),float(gga.Latitude),float(gga.Longitude),float(gga.AntAlt),int(gga.GPS_QualityIndicator),int(gga.SatInView),station)
-
             x.execute("INSERT INTO primary_data (datetime,station_id,hdop,vdop,pdop,fix,nsat,latitude,longitude,height) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(datem,int(station),float(gsa.Hdop),float(gsa.Vdop),float(gsa.Pdop),int(gga.GPS_QualityIndicator),int(gga.SatInView),float(gga.Latitude),float(gga.Longitude),float(gga.AntAlt)))
             id = x.lastrowid
 
             for item in gsv:
                 for sat in item.SatList:
-                    # print (int(sat.id),id,int(sat.azimuth),int(sat.elevation),int(sat.snr),sat.id==gsa.SatList[0])
-                    # print("sat.id: " + sat.id )
-                    # print("gsa.SatList[0]: " + gsa.SatList[0])
-
                     x.execute("INSERT INTO sat_epoch (prn_code,obs_id,azm,elv,cno,used_fix) values (%s,%s,%s,%s,%s,%s)",
                       (int(sat.id),id,int(sat.azimuth),int(sat.elevation),int(sat.snr),int(sat.id==gsa.SatList[0])))
 

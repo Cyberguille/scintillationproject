@@ -100,7 +100,7 @@ lastRMC = ""
 nmea_packet = []
 # Config Segment BEGIN
 workFolder = "/media/guille/Storage/Project/GPS/GPS_Log_00/"
-fileId = 0
+fileId = 40
 # Config Segment END
 infilepath = workFolder + str(fileId) + ".nmea"
 outfilepath = workFolder + str(fileId) + "_ok.nmea"
@@ -124,5 +124,5 @@ while os.path.isfile(infilepath):
     fileId += 1
     infilepath = workFolder + str(fileId) + ".nmea"
     outfilepath = workFolder + str(fileId) + "_ok.nmea"
-    # break
+    break
 print "End"

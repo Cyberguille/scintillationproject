@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 19, 2016 at 02:28 PM
+-- Generation Time: Jun 16, 2016 at 09:00 PM
 -- Server version: 5.5.43-0+deb8u1
 -- PHP Version: 5.6.7-1
 
@@ -42,17 +42,17 @@ CREATE TABLE IF NOT EXISTS `data` (
 
 CREATE TABLE IF NOT EXISTS `primary_data` (
 `id` int(11) NOT NULL,
-  `datetime` char(16) NOT NULL,
-  `hdop` decimal(10,0) NOT NULL,
-  `vdop` decimal(10,0) NOT NULL,
-  `pdop` decimal(10,0) NOT NULL,
-  `lat` float NOT NULL,
-  `long` float NOT NULL,
-  `height` float NOT NULL,
+  `datetime` char(20) NOT NULL,
+  `hdop` double(2,1) NOT NULL,
+  `vdop` double(2,1) NOT NULL,
+  `pdop` double(2,1) NOT NULL,
+  `latitude` double(13,10) DEFAULT NULL,
+  `longitude` double(13,10) DEFAULT NULL,
+  `height` double(10,5) DEFAULT NULL,
   `fix` tinyint(1) NOT NULL,
   `nsat` int(11) NOT NULL,
   `station_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=245037 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -61,14 +61,14 @@ CREATE TABLE IF NOT EXISTS `primary_data` (
 --
 
 CREATE TABLE IF NOT EXISTS `sat_epoch` (
-  `id` int(11) NOT NULL,
-  `prn_code` int(11) NOT NULL,
+`id` int(11) NOT NULL,
+  `prn_code` int(2) NOT NULL,
   `obs_id` int(11) NOT NULL,
-  `azm` float NOT NULL,
-  `elv` float NOT NULL,
-  `cno` float NOT NULL,
+  `azm` int(3) NOT NULL,
+  `elv` int(2) NOT NULL,
+  `cno` int(2) NOT NULL,
   `used_fix` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2464355 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -83,6 +83,13 @@ CREATE TABLE IF NOT EXISTS `station` (
   `name` varchar(25) NOT NULL,
   `ref_height` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `station`
+--
+
+INSERT INTO `station` (`id`, `ref_lat`, `ref_long`, `name`, `ref_height`) VALUES
+(1, 12.3, 13.4, 'RayTest', 23.5);
 
 -- --------------------------------------------------------
 
@@ -116,7 +123,7 @@ ALTER TABLE `primary_data`
 -- Indexes for table `sat_epoch`
 --
 ALTER TABLE `sat_epoch`
- ADD KEY `obs_id` (`obs_id`);
+ ADD PRIMARY KEY (`id`), ADD KEY `obs_id` (`obs_id`);
 
 --
 -- Indexes for table `station`
@@ -143,7 +150,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `primary_data`
 --
 ALTER TABLE `primary_data`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=245037;
+--
+-- AUTO_INCREMENT for table `sat_epoch`
+--
+ALTER TABLE `sat_epoch`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2464355;
 --
 -- Constraints for dumped tables
 --
